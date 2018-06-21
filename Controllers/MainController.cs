@@ -18,6 +18,7 @@ namespace FormSubmission.Controllers
         [HttpGet("")]
         public IActionResult Main()
         {   
+            ViewBag.errors = ModelState.Values;
             return View();
         }
         [HttpPost("create")]
@@ -35,12 +36,12 @@ namespace FormSubmission.Controllers
             if (TryValidateModel(NewUser) == false)
             {
                 ViewBag.errors = ModelState.Values;
-                return View();
+                return View("Main");
             }
             // if validation passes, add user to database and redirect to success 
             else 
             {   
-                string query = $"INSERT INTO form (FirstName, LastName, Age, Email, Password) VALUES ('{first_name}', '{last_name}', '{age}', '{email}', '{password}');";
+                string query = $"INSERT INTO form (first_name, last_name, age, email, password) VALUES ('{first_name}', '{last_name}', '{age}', '{email}', '{password}');";
                 _dbConnector.Query(query);
                 return RedirectToAction("Success");
             }
